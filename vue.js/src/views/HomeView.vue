@@ -10,7 +10,7 @@
 </div>
   <br><br>
 
-  <Cards/>
+  
   <Card/>
 
 </template>
@@ -18,12 +18,11 @@
 <script>
   import Swiper from '../components/Swiper.vue'
   import Slider from '../components/Slider.vue'
-  import Cards from '../components/Cards'
+
   import Card from '../components/Card'
   export default {
     components: {
       Slider,
-      Cards,
       Swiper,
       Card
     },

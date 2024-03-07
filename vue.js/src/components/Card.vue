@@ -2,15 +2,14 @@
     <section style="background-color: #eee;">
   <div class="container py-5">
     
-    <div class="row justify-content-center">
-      <div class="col-md-6 col-lg-6 col-xl-7">
-        <div class="card shadow-0 border rounded-3">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+    <div class="row justify-content-center" >
+      <div class="col-md-4 col-lg-4 col-sm-12 col-xl-6 p-3" v-for="course in courses" :key="course.id">
+        <div class="card shadow-0 border rounded-3" >
+          <div class="card-body" >
+            <div class="row" >
+              <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0" >
                 <div class="bg-image hover-zoom ripple rounded ripple-surface">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/new/img(5).webp"
-                    class="w-100" />
+                  <img :src="require('@/assets/images/' + course.cover)" class="w-100" />
                   <a href="#!">
                     <div class="hover-overlay">
                       <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
@@ -19,39 +18,22 @@
                 </div>
               </div>
               <div class="col-md-6 col-lg-6 col-xl-6">
-                <h5>Quant ruybi shirts</h5>
-                <div class="d-flex flex-row">
-                  <div class="text-danger mb-1 me-2">
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                  </div>
-                  <span>145</span>
-                </div>
-                <div class="mt-1 mb-0 text-muted small">
-                  <span>100% cotton</span>
-                  <span class="text-primary"> • </span>
-                  <span>Light weight</span>
-                  <span class="text-primary"> • </span>
-                  <span>Best finish<br /></span>
-                </div>
-                <div class="mb-2 text-muted small">
-                  <span>Unique design</span>
-                  <span class="text-primary"> • </span>
-                  <span>For women</span>
-                  <span class="text-primary"> • </span>
-                  <span>Casual<br /></span>
-                </div>
-                <p class="text-truncate mb-4 mb-md-0">
-                  There are many variations of passages of Lorem Ipsum available, but the
-                  majority have suffered alteration in some form, by injected humour, or
-                  randomised words which don't look even slightly believable.
-                </p>
-              </div>
+  <h5>{{ course.title }}</h5>
+  <div class="d-flex flex-row">
+    <div class="text-danger mb-1 me-2">
+      <div class="stars-container">
+        <i v-for="star in course.rate" :key="star" class="fa fa-star"></i>
+      </div>
+    </div>
+    <span>145</span>
+  </div>
+  <div class="mt-1 mb-0 text-muted">
+    {{ course.description }}
+  </div>
+</div>
               <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
                 <div class="d-flex flex-row align-items-center mb-1">
-                  <h4 class="mb-1 me-1">$17.99</h4>
+                  <h4 class="mb-1 me-1">${{ course.price }}</h4>
                   <span class="text-danger"><s>$25.99</s></span>
                 </div>
                 <h6 class="text-success">Free shipping</h6>
@@ -71,10 +53,40 @@
 </section>
 </template>
 <script>
+import axios from 'axios'
 export default {
-    name: 'CardComponent'
+    name: 'CardComponent',
+    data(){
+        return{
+            courses: []
+        }
+    },
+    methods:{
+        async getCourses(){
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/index');
+                this.courses = response.data.courses;
+                console.log(this.courses);
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        
+        async buy(){
+            if(localStorage.getItem('token')){
+                this.$router.push('/buy');
+            }else{
+                this.$router.push('/login');
+            }
+        }
+    },
+    created(){
+        this.getCourses();
+    }
 }
 </script>
-<style lang="">
-    
+<style>
+    .start_container{
+        display:inline;
+    }
 </style>
